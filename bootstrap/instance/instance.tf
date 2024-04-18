@@ -48,12 +48,11 @@ resource "kubernetes_deployment_v1" "scrolls" {
 
         container {
           name              = "main"
-          image             = var.image
+          image             = "ghcr.io/txpipe/asteria-backend:${var.image_tag}"
           image_pull_policy = "IfNotPresent"
           args = [
-            "/root/.tailcall/bin/tailcall",
-            "start",
-            "/config/schema.graphql",
+            "DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:5432/scrolls-${var.network}",
+            "./asteria-backend"
           ]
 
           resources {
@@ -72,16 +71,29 @@ resource "kubernetes_deployment_v1" "scrolls" {
             name           = "api"
           }
 
-          volume_mount {
-            name       = "config"
-            mount_path = "/config"
+          env {
+            name  = "DATABASE_URL"
+            value = "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/scrolls-${var.network}"
           }
-        }
 
-        volume {
-          name = "config"
-          config_map {
-            name = "scrolls-config"
+          env {
+            name = "POSTGRES_PASSWORD"
+            value_from {
+              secret_key_ref {
+                key  = "password"
+                name = "postgres.${var.postgres_host}.credentials.postgresql.acid.zalan.do"
+              }
+            }
+          }
+
+          env {
+            name  = "POSTGRES_HOST"
+            value = var.postgres_host
+          }
+
+          env {
+            name  = "POSTGRES_USER"
+            value = "scrolls"
           }
         }
 

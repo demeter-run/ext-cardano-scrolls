@@ -10,14 +10,18 @@ variable "network" {
   type = string
 
   validation {
-    condition     = contains(["mainnet", "preprod", "preview", "vector-testnet"], var.network)
-    error_message = "Invalid network. Allowed values are mainnet, preprod, preview, vector-testnet."
+    condition     = contains(["mainnet", "preprod", "preview"], var.network)
+    error_message = "Invalid network. Allowed values are mainnet, preprod, preview."
   }
 }
 
-variable "image" {
+variable "image_tag" {
+  type = string
+}
+
+variable "postgres_host" {
   type    = string
-  default = "ghcr.io/tailcallhq/tailcall/tc-server:v0.76.1"
+  default = "dmtr-postgres-scrolls"
 }
 
 variable "replicas" {
@@ -47,3 +51,4 @@ variable "resources" {
     }
   }
 }
+

@@ -13,18 +13,6 @@ resource "kubernetes_namespace" "namespace" {
   }
 }
 
-resource "kubernetes_secret" "tls_stuff" {
-  metadata {
-    name      = "scrolls-m0-proxy-wildcard-tls"
-    namespace = "ext-scrolls-m0"
-  }
-
-  data = {
-    "tls.crt" = "${file("${path.module}/temp.crt")}",
-    "tls.key" = "${file("${path.module}/temp.key")}",
-  }
-}
-
 module "scrolls_v1_feature" {
   depends_on         = [kubernetes_namespace.namespace]
   source             = "./feature"
@@ -35,6 +23,17 @@ module "scrolls_v1_feature" {
   api_key_salt       = var.api_key_salt
   dcu_per_request    = var.dcu_per_request
   resources          = var.operator_resources
+}
+
+module "scrolls_v1_postgres" {
+  depends_on                   = [kubernetes_namespace.namespace]
+  source                       = "./postgres"
+  namespace                    = var.namespace
+  enable_master_load_balancer  = var.enable_master_load_balancer
+  enable_replica_load_balancer = var.enable_replica_load_balancer
+  postgres_resources           = var.postgres_resources
+  postgres_params              = var.postgres_params
+  postgres_volume              = var.postgres_volume
 }
 
 module "scrolls_v1_proxy" {
@@ -49,12 +48,12 @@ module "scrolls_v1_proxy" {
 }
 
 module "scrolls_instances" {
-  depends_on = [kubernetes_namespace.namespace]
+  depends_on = [kubernetes_namespace.namespace, module.scrolls_v1_postgres]
   for_each   = var.instances
   source     = "./instance"
 
   namespace = var.namespace
-  image     = each.value.image
+  image_tag = each.value.image_tag
   salt      = each.value.salt
   network   = each.value.network
   replicas  = coalesce(each.value.replicas, 1)
