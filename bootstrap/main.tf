@@ -37,7 +37,7 @@ module "scrolls_v1_postgres" {
 }
 
 module "scrolls_v1_proxy" {
-  depends_on      = [kubernetes_namespace.namespace, kubernetes_secret.tls_stuff]
+  depends_on      = [kubernetes_namespace.namespace]
   source          = "./proxy"
   proxy_image_tag = var.proxy_image_tag
   namespace       = var.namespace
