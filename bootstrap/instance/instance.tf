@@ -4,7 +4,6 @@ locals {
 }
 
 resource "kubernetes_deployment_v1" "scrolls" {
-  depends_on       = [kubernetes_config_map.scrolls]
   wait_for_rollout = false
 
   metadata {
