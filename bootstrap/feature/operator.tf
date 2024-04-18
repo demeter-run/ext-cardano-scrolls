@@ -71,6 +71,11 @@ resource "kubernetes_deployment_v1" "operator" {
             value = var.dns_zone
           }
 
+          env {
+            name = "EXTENSION_SUBDOMAIN"
+            value = var.extension_name
+          }
+
           resources {
             limits = {
               cpu    = var.resources.limits.cpu

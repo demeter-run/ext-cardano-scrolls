@@ -23,6 +23,7 @@ module "scrolls_v1_feature" {
   api_key_salt       = var.api_key_salt
   dcu_per_request    = var.dcu_per_request
   resources          = var.operator_resources
+  extension_name     = var.extension_name
 }
 
 module "scrolls_v1_postgres" {
