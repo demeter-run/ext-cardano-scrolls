@@ -53,3 +53,7 @@ variable "resources" {
     }
   }
 }
+
+variable "extension_name" {
+  type = string
+}

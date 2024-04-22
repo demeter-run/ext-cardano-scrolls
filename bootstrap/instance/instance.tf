@@ -49,10 +49,6 @@ resource "kubernetes_deployment_v1" "scrolls" {
           name              = "main"
           image             = "ghcr.io/txpipe/asteria-backend:${var.image_tag}"
           image_pull_policy = "IfNotPresent"
-          args = [
-            "DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:5432/scrolls-${var.network}",
-            "./asteria-backend"
-          ]
 
           resources {
             limits = {
@@ -71,16 +67,11 @@ resource "kubernetes_deployment_v1" "scrolls" {
           }
 
           env {
-            name  = "DATABASE_URL"
-            value = "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/scrolls-${var.network}"
-          }
-
-          env {
             name = "POSTGRES_PASSWORD"
             value_from {
               secret_key_ref {
                 key  = "password"
-                name = "postgres.${var.postgres_host}.credentials.postgresql.acid.zalan.do"
+                name = "scrolls.${var.postgres_host}.credentials.postgresql.acid.zalan.do"
               }
             }
           }
@@ -94,7 +85,18 @@ resource "kubernetes_deployment_v1" "scrolls" {
             name  = "POSTGRES_USER"
             value = "scrolls"
           }
+
+          env {
+            name  = "DATABASE_URL"
+            value = "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/scrolls-${var.network}"
+          }
+          
+          env {
+            name = "ROCKET_ADDRESS"
+            value = "0.0.0.0"
+          }
         }
+
 
         toleration {
           effect   = "NoSchedule"
