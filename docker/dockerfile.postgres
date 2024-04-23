@@ -1,0 +1,45 @@
+ARG MUMAK_VERSION=b84ba2b4b96632b069569f9ad3c51a3d60a03ad1
+
+FROM ghcr.io/zalando/spilo-15:3.2-p1 as build
+
+RUN apt update && apt -y install \
+    curl \
+    git \
+    libclang-dev \
+    build-essential \
+    libreadline-dev \
+    zlib1g-dev \
+    flex \
+    bison \
+    libxml2-dev \
+    libxslt-dev \
+    libssl-dev \
+    libxml2-utils \
+    xsltproc \
+    ccache \
+    pkg-config \
+    sudo
+
+# Add postgres to the sudoers with no password prompt for specific commands
+RUN echo "postgres ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/postgres
+
+# Using su instead of USER since dev container doesn't seem to like USER docker directive
+RUN chown postgres:root /home/postgres/.bashrc
+RUN su - postgres -c 'curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
+RUN su - postgres -c 'cargo install --version 0.11.3 --locked cargo-pgrx && cargo pgrx init'
+
+RUN chown -R postgres:root /usr/share/postgresql
+RUN chown -R postgres:root /usr/lib/postgresql
+
+# Install extension
+WORKDIR /source
+RUN git clone https://github.com/txpipe/mumak.git /source
+RUN git checkout $MUMAK_VERSION
+RUN sudo chown -R postgres:postgres /source
+RUN su - postgres -c 'cd /source/extension && cargo pgrx install -r --pg-config /usr/lib/postgresql/14/bin/pg_config'
+RUN su - postgres -c 'cd /source/extension && cargo pgrx install -r --pg-config /usr/lib/postgresql/15/bin/pg_config'
+
+# Extract only compiled extensions
+FROM ghcr.io/zalando/spilo-15:3.2-p1
+COPY --from=build /usr/share/postgresql /usr/share/postgresql
+COPY --from=build /usr/lib/postgresql /usr/lib/postgresql

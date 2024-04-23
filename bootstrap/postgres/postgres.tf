@@ -22,7 +22,7 @@ resource "kubernetes_manifest" "postgres" {
       "allowedSourceRanges" = [
         "0.0.0.0/0"
       ]
-      "dockerImage" : "ghcr.io/zalando/spilo-15:3.2-p1"
+      "dockerImage" : "ghcr.io/demeter-run/ext-cardano-scrolls-postgres"
       "teamId" = "dmtr"
       "tolerations" = [
         {
@@ -40,13 +40,13 @@ resource "kubernetes_manifest" "postgres" {
           "effect"   = "NoSchedule"
           "key"      = "demeter.run/compute-arch"
           "operator" = "Equal"
-          "value"    = "arm64"
+          "value"    = "x86"
         },
         {
           "effect"   = "NoSchedule"
           "key"      = "demeter.run/availability-sla"
           "operator" = "Equal"
-          "value"    = "consistent"
+          "value"    = "best-effort"
         }
       ]
       "serviceAnnotations" : {
