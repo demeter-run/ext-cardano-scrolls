@@ -37,6 +37,32 @@ module "scrolls_v1_postgres" {
   postgres_volume              = var.postgres_volume
 }
 
+module "scrolls_v1_indexers" {
+  depends_on = [module.scrolls_v1_postgres]
+  for_each   = var.indexers
+  source     = "./indexer"
+
+  namespace        = var.namespace
+  image_tag        = each.value.image_tag
+  network          = each.value.network
+  testnet_magic    = each.value.testnet_magic
+  index_start_slot = each.value.index_start_slot
+  index_start_hash = each.value.index_start_hash
+  utxo_adresses    = each.value.utxo_adresses
+  node_private_dns = each.value.node_private_dns
+  postgres_host    = each.value.postgres_host
+  resources = coalesce(each.value.resources, {
+    limits : {
+      cpu : "200m",
+      memory : "1Gi"
+    }
+    requests : {
+      cpu : "200m",
+      memory : "500Mi"
+    }
+  })
+}
+
 module "scrolls_v1_proxy" {
   depends_on      = [kubernetes_namespace.namespace]
   source          = "./proxy"
@@ -53,11 +79,12 @@ module "scrolls_instances" {
   for_each   = var.instances
   source     = "./instance"
 
-  namespace = var.namespace
-  image_tag = each.value.image_tag
-  salt      = each.value.salt
-  network   = each.value.network
-  replicas  = coalesce(each.value.replicas, 1)
+  namespace          = var.namespace
+  image_tag          = each.value.image_tag
+  salt               = each.value.salt
+  shipyard_policy_id = each.value.shipyard_policy_id
+  network            = each.value.network
+  replicas           = coalesce(each.value.replicas, 1)
   resources = coalesce(each.value.resources, {
     limits : {
       cpu : "200m",
