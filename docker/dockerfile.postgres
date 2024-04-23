@@ -29,8 +29,7 @@ RUN echo "postgres ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/postgres
 RUN chown postgres:root /home/postgres/.bashrc
 RUN su - postgres -c 'curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
 RUN su - postgres -c 'cargo install --version 0.11.3 --locked cargo-pgrx'
-RUN su - postgres -c 'cargo pgrx init --pg14 /usr/lib/postgresql/14/bin/pg_config'
-RUN su - postgres -c 'cargo pgrx init --pg15 /usr/lib/postgresql/15/bin/pg_config'
+RUN su - postgres -c 'cargo pgrx init --pg14 /usr/lib/postgresql/14/bin/pg_config --pg15 /usr/lib/postgresql/15/bin/pg_config'
 
 RUN chown -R postgres:root /usr/share/postgresql
 RUN chown -R postgres:root /usr/lib/postgresql
