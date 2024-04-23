@@ -22,7 +22,7 @@ resource "kubernetes_manifest" "postgres" {
       "allowedSourceRanges" = [
         "0.0.0.0/0"
       ]
-      "dockerImage" : "ghcr.io/zalando/spilo-15:3.2-p1"
+      "dockerImage" : "ghcr.io/demeter-run/ext-cardano-scrolls-postgres-operator"
       "teamId" = "dmtr"
       "tolerations" = [
         {
