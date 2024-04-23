@@ -22,7 +22,7 @@ resource "kubernetes_manifest" "postgres" {
       "allowedSourceRanges" = [
         "0.0.0.0/0"
       ]
-      "dockerImage" : "ghcr.io/demeter-run/ext-cardano-scrolls-postgres-operator"
+      "dockerImage" : "ghcr.io/demeter-run/ext-cardano-scrolls-postgres"
       "teamId" = "dmtr"
       "tolerations" = [
         {

@@ -15,8 +15,8 @@ jobs:
       matrix:
         include:
           - context: .
-            file: docker/dockerfile.operator
-            endpoint: demeter-run/ext-cardano-scrolls-postgres-operator
+            file: docker/dockerfile.postgres
+            endpoint: demeter-run/ext-cardano-scrolls-postgres
 
     continue-on-error: true
     runs-on: ubuntu-latest
