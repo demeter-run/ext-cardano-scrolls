@@ -105,10 +105,34 @@ variable "proxy_resources" {
 
 variable "instances" {
   type = map(object({
-    image_tag = optional(string)
-    salt      = string
-    network   = string
-    replicas  = optional(number)
+    image_tag          = optional(string)
+    salt               = string
+    network            = string
+    replicas           = optional(number)
+    shipyard_policy_id = string
+    resources = optional(object({
+      limits = object({
+        cpu    = string
+        memory = string
+      })
+      requests = object({
+        cpu    = string
+        memory = string
+      })
+    }))
+  }))
+}
+
+variable "indexers" {
+  type = map(object({
+    image_tag        = optional(string)
+    network          = string
+    testnet_magic    = string
+    index_start_slot = number
+    index_start_hash = string
+    utxo_adresses    = string
+    node_private_dns = string
+    postgres_host    = string
     resources = optional(object({
       limits = object({
         cpu    = string

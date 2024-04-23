@@ -2,10 +2,6 @@ variable "namespace" {
   type = string
 }
 
-variable "salt" {
-  type = string
-}
-
 variable "network" {
   type = string
 
@@ -19,18 +15,29 @@ variable "image_tag" {
   type = string
 }
 
-variable "shipyard_policy_id" {
+variable "testnet_magic" {
+  type = string
+}
+
+variable "index_start_slot" {
+  type = number
+}
+
+variable "index_start_hash" {
+  type = string
+}
+
+variable "utxo_adresses" {
+  type = string
+}
+
+variable "node_private_dns" {
   type = string
 }
 
 variable "postgres_host" {
   type    = string
   default = "dmtr-postgres-scrolls"
-}
-
-variable "replicas" {
-  type    = number
-  default = 1
 }
 
 variable "resources" {
@@ -55,3 +62,4 @@ variable "resources" {
     }
   }
 }
+

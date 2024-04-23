@@ -1,27 +1,26 @@
 locals {
-  name           = "scrolls-${var.network}-${var.salt}"
-  container_port = 8000
+  name = "scrolls-indexer-${var.network}"
 }
 
-resource "kubernetes_deployment_v1" "scrolls" {
+resource "kubernetes_deployment_v1" "indexer" {
   wait_for_rollout = false
 
   metadata {
     name      = local.name
     namespace = var.namespace
     labels = {
-      "role"                        = "instance"
-      "demeter.run/kind"            = "ScrollsInstance"
+      "role"                        = "indexer"
+      "demeter.run/kind"            = "ScrollsIndexer"
       "cardano.demeter.run/network" = var.network
     }
   }
 
   spec {
-    replicas = var.replicas
+    replicas = 1
 
     selector {
       match_labels = {
-        "role"                        = "instance"
+        "role"                        = "indexer"
         "demeter.run/instance"        = local.name
         "cardano.demeter.run/network" = var.network
       }
@@ -32,7 +31,7 @@ resource "kubernetes_deployment_v1" "scrolls" {
       metadata {
         name = local.name
         labels = {
-          "role"                        = "instance"
+          "role"                        = "indexer"
           "demeter.run/instance"        = local.name
           "cardano.demeter.run/network" = var.network
         }
@@ -46,8 +45,8 @@ resource "kubernetes_deployment_v1" "scrolls" {
         }
 
         container {
-          name              = "main"
-          image             = "ghcr.io/txpipe/asteria-backend:${var.image_tag}"
+          name              = "indexer"
+          image             = "ghcr.io/txpipe/asteria-indexer:${var.image_tag}"
           image_pull_policy = "IfNotPresent"
 
           resources {
@@ -59,16 +58,6 @@ resource "kubernetes_deployment_v1" "scrolls" {
               cpu    = var.resources.requests.cpu
               memory = var.resources.requests.memory
             }
-          }
-
-          port {
-            container_port = local.container_port
-            name           = "api"
-          }
-
-          env {
-            name  = "SHIPYARD_POLICY_ID"
-            value = var.shipyard_policy_id
           }
 
           env {
@@ -92,14 +81,78 @@ resource "kubernetes_deployment_v1" "scrolls" {
           }
 
           env {
-            name  = "DATABASE_URL"
-            value = "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/scrolls-${var.network}"
+            name  = "POSTGRES_DATABASE"
+            value = "scrolls-${var.network}"
           }
 
           env {
-            name  = "ROCKET_ADDRESS"
-            value = "0.0.0.0"
+            name  = "POSTGRES_PORT"
+            value = "5432"
           }
+
+          env {
+            name  = "ConnectionStrings__CardanoContext"
+            value = "Host=$(POSTGRES_HOST);Database=$(POSTGRES_DATABASE);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD);Port=$(POSTGRES_PORT)"
+          }
+
+          env {
+            name  = "ConnectionStrings__CardanoContextSchema"
+            value = "public"
+          }
+
+          env {
+            name  = "CardanoNodeSocketPath"
+            value = "/ipc/node.socket"
+          }
+
+          env {
+            name  = "CardanoNetworkMagic"
+            value = var.testnet_magic
+          }
+
+          env {
+            name  = "CardanoIndexStartSlot"
+            value = var.index_start_slot
+          }
+
+          env {
+            name  = "CardanoIndexStartHash"
+            value = var.index_start_hash
+          }
+
+          env {
+            name  = "UtxoAddresses"
+            value = var.utxo_adresses
+          }
+
+          volume_mount {
+            name       = "ipc"
+            mount_path = "/ipc"
+          }
+        }
+
+        container {
+          name  = "socat"
+          image = "alpine/socat"
+          args = [
+            "UNIX-LISTEN:/ipc/node.socket,reuseaddr,fork,unlink-early",
+            "TCP-CONNECT:${var.node_private_dns}"
+          ]
+
+          security_context {
+            run_as_user  = 1000
+            run_as_group = 1000
+          }
+
+          volume_mount {
+            name       = "ipc"
+            mount_path = "/ipc"
+          }
+        }
+
+        volume {
+          name = "ipc"
+          empty_dir {}
         }
 
         toleration {
