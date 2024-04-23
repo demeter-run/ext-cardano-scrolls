@@ -40,13 +40,13 @@ resource "kubernetes_manifest" "postgres" {
           "effect"   = "NoSchedule"
           "key"      = "demeter.run/compute-arch"
           "operator" = "Equal"
-          "value"    = "arm64"
+          "value"    = "x86"
         },
         {
           "effect"   = "NoSchedule"
           "key"      = "demeter.run/availability-sla"
           "operator" = "Equal"
-          "value"    = "consistent"
+          "value"    = "best-effort"
         }
       ]
       "serviceAnnotations" : {
