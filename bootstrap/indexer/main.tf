@@ -27,6 +27,10 @@ variable "index_start_hash" {
   type = string
 }
 
+variable "shipyard_policy_id" {
+  type = string
+}
+
 variable "utxo_adresses" {
   type = string
 }

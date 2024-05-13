@@ -121,6 +121,11 @@ resource "kubernetes_deployment_v1" "indexer" {
           }
 
           env {
+            name  = "ShipyardPolicyId"
+            value = var.shipyard_policy_id
+          }
+
+          env {
             name  = "UtxoAddresses"
             value = var.utxo_adresses
           }

@@ -42,15 +42,16 @@ module "scrolls_v1_indexers" {
   for_each   = var.indexers
   source     = "./indexer"
 
-  namespace        = var.namespace
-  image_tag        = each.value.image_tag
-  network          = each.value.network
-  testnet_magic    = each.value.testnet_magic
-  index_start_slot = each.value.index_start_slot
-  index_start_hash = each.value.index_start_hash
-  utxo_adresses    = each.value.utxo_adresses
-  node_private_dns = each.value.node_private_dns
-  postgres_host    = each.value.postgres_host
+  namespace          = var.namespace
+  image_tag          = each.value.image_tag
+  network            = each.value.network
+  testnet_magic      = each.value.testnet_magic
+  index_start_slot   = each.value.index_start_slot
+  index_start_hash   = each.value.index_start_hash
+  shipyard_policy_id = each.value.shipyard_policy_id
+  utxo_adresses      = each.value.utxo_adresses
+  node_private_dns   = each.value.node_private_dns
+  postgres_host      = each.value.postgres_host
   resources = coalesce(each.value.resources, {
     limits : {
       cpu : "200m",
