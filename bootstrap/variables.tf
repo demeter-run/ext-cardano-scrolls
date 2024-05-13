@@ -125,14 +125,15 @@ variable "instances" {
 
 variable "indexers" {
   type = map(object({
-    image_tag        = optional(string)
-    network          = string
-    testnet_magic    = string
-    index_start_slot = number
-    index_start_hash = string
-    utxo_adresses    = string
-    node_private_dns = string
-    postgres_host    = string
+    image_tag          = optional(string)
+    network            = string
+    testnet_magic      = string
+    index_start_slot   = number
+    index_start_hash   = string
+    shipyard_policy_id = string
+    utxo_adresses      = string
+    node_private_dns   = string
+    postgres_host      = string
     resources = optional(object({
       limits = object({
         cpu    = string
