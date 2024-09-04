@@ -83,7 +83,6 @@ module "scrolls_instances" {
   namespace          = var.namespace
   image_tag          = each.value.image_tag
   salt               = each.value.salt
-  shipyard_policy_id = each.value.shipyard_policy_id
   network            = each.value.network
   replicas           = coalesce(each.value.replicas, 1)
   resources = coalesce(each.value.resources, {

@@ -109,7 +109,6 @@ variable "instances" {
     salt               = string
     network            = string
     replicas           = optional(number)
-    shipyard_policy_id = string
     resources = optional(object({
       limits = object({
         cpu    = string
