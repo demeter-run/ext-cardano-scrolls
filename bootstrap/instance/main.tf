@@ -19,10 +19,6 @@ variable "image_tag" {
   type = string
 }
 
-variable "shipyard_policy_id" {
-  type = string
-}
-
 variable "postgres_host" {
   type    = string
   default = "dmtr-postgres-scrolls"
