@@ -1,6 +1,5 @@
 locals {
-  name           = "scrolls-${var.network}-${var.salt}"
-  container_port = 8000
+  name = "scrolls-${var.network}-${var.salt}"
 }
 
 resource "kubernetes_deployment_v1" "scrolls" {
@@ -47,7 +46,7 @@ resource "kubernetes_deployment_v1" "scrolls" {
 
         container {
           name              = "main"
-          image             = "ghcr.io/demeter-run/ext-cardano-scrolls-instance:${var.image_tag}"
+          image             = "${var.image}:${var.image_tag}"
           image_pull_policy = "IfNotPresent"
 
           resources {
@@ -62,7 +61,7 @@ resource "kubernetes_deployment_v1" "scrolls" {
           }
 
           port {
-            container_port = local.container_port
+            container_port = var.port
             name           = "api"
           }
 

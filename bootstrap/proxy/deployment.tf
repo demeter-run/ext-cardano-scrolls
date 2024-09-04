@@ -1,6 +1,6 @@
 resource "kubernetes_deployment_v1" "scrolls_proxy" {
   wait_for_rollout = false
-  depends_on = [ kubernetes_manifest.certificate_cluster_wildcard_tls ]
+  depends_on       = [kubernetes_manifest.certificate_cluster_wildcard_tls]
 
   metadata {
     name      = local.name
@@ -78,17 +78,17 @@ resource "kubernetes_deployment_v1" "scrolls_proxy" {
           }
 
           env {
-            name = "SSL_CRT_PATH"
+            name  = "SSL_CRT_PATH"
             value = "/certs/tls.crt"
           }
 
           env {
-            name = "SSL_KEY_PATH"
+            name  = "SSL_KEY_PATH"
             value = "/certs/tls.key"
           }
 
           env {
-            name = "PROXY_TIERS_PATH"
+            name  = "PROXY_TIERS_PATH"
             value = "/configs/tiers.toml"
           }
 
