@@ -47,7 +47,7 @@ resource "kubernetes_deployment_v1" "scrolls" {
 
         container {
           name              = "main"
-          image             = "ghcr.io/txpipe/asteria-backend:${var.image_tag}"
+          image             = "ghcr.io/demeter-run/ext-cardano-scrolls-instance:${var.image_tag}"
           image_pull_policy = "IfNotPresent"
 
           resources {
@@ -64,11 +64,6 @@ resource "kubernetes_deployment_v1" "scrolls" {
           port {
             container_port = local.container_port
             name           = "api"
-          }
-
-          env {
-            name  = "SHIPYARD_POLICY_ID"
-            value = var.shipyard_policy_id
           }
 
           env {
@@ -95,11 +90,6 @@ resource "kubernetes_deployment_v1" "scrolls" {
             name  = "DATABASE_URL"
             value = "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/scrolls-${var.network}"
           }
-
-          env {
-            name  = "ROCKET_ADDRESS"
-            value = "0.0.0.0"
-          }
         }
 
         toleration {
@@ -119,8 +109,7 @@ resource "kubernetes_deployment_v1" "scrolls" {
         toleration {
           effect   = "NoSchedule"
           key      = "demeter.run/availability-sla"
-          operator = "Equal"
-          value    = "consistent"
+          operator = "Exists"
         }
       }
     }
