@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
           - context: docker/instance
-            file: docker/dockerfile.instance
+            file: docker/instance/Dockerfile
             endpoint: demeter-run/ext-cardano-scrolls-instance
 
     continue-on-error: true
