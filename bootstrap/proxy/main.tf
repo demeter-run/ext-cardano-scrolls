@@ -46,7 +46,7 @@ variable "resources" {
 
 variable "scrolls_port" {
   type    = number
-  default = 8000
+  default = 5000
 }
 
 

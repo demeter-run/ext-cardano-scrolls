@@ -73,6 +73,7 @@ module "scrolls_v1_proxy" {
   resources       = var.proxy_resources
   dns_zone        = var.dns_zone
   extension_name  = var.extension_name
+  scrolls_port    = var.scrolls_port
 }
 
 module "scrolls_instances" {
@@ -80,11 +81,13 @@ module "scrolls_instances" {
   for_each   = var.instances
   source     = "./instance"
 
-  namespace          = var.namespace
-  image_tag          = each.value.image_tag
-  salt               = each.value.salt
-  network            = each.value.network
-  replicas           = coalesce(each.value.replicas, 1)
+  namespace = var.namespace
+  image     = each.value.image
+  image_tag = each.value.image_tag
+  salt      = each.value.salt
+  network   = each.value.network
+  port      = var.scrolls_port
+  replicas  = coalesce(each.value.replicas, 1)
   resources = coalesce(each.value.resources, {
     limits : {
       cpu : "200m",
@@ -105,4 +108,5 @@ module "scrolls_services" {
   namespace       = var.namespace
   scrolls_version = each.value.version
   network         = each.value.network
+  port            = var.scrolls_port
 }

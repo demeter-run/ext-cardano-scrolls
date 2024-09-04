@@ -15,8 +15,19 @@ variable "network" {
   }
 }
 
+variable "image" {
+  type    = string
+  default = "ghcr.io/demeter-run/ext-cardano-scrolls-instance"
+}
+
 variable "image_tag" {
-  type = string
+  type    = string
+  default = "latest"
+}
+
+variable "port" {
+  type    = number
+  default = 8000
 }
 
 variable "postgres_host" {

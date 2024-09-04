@@ -22,6 +22,11 @@ variable "scrolls_versions" {
   default = ["v0"]
 }
 
+variable "scrolls_port" {
+  type    = number
+  default = 8000
+}
+
 // Operator
 variable "operator_image_tag" {
   type = string
@@ -105,10 +110,11 @@ variable "proxy_resources" {
 
 variable "instances" {
   type = map(object({
-    image_tag          = optional(string)
-    salt               = string
-    network            = string
-    replicas           = optional(number)
+    image     = optional(string)
+    image_tag = optional(string)
+    salt      = string
+    network   = string
+    replicas  = optional(number)
     resources = optional(object({
       limits = object({
         cpu    = string

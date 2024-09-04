@@ -20,6 +20,11 @@ variable "network" {
   }
 }
 
+variable "port" {
+  type    = number
+  default = 8000
+}
+
 resource "kubernetes_service_v1" "well_known_service" {
   metadata {
     name      = local.service_name
@@ -28,13 +33,15 @@ resource "kubernetes_service_v1" "well_known_service" {
 
   spec {
     port {
-      name     = "api"
-      protocol = "TCP"
-      port     = local.port
+      name        = "api"
+      protocol    = "TCP"
+      port        = var.port
+      target_port = var.port
     }
 
     selector = {
       "cardano.demeter.run/network" = var.network
+      "role"                        = "instance"
     }
 
     type = "ClusterIP"
