@@ -14,6 +14,17 @@ variable "operator_image_tag" {
   type = string
 }
 
+variable "dbcreds" {
+  type = object({
+    username = string
+    password = string
+  })
+}
+
+variable "dbcreds_secret_name" {
+  type    = string
+  default = "scrolls-dbcreds"
+}
 
 variable "metrics_delay" {
   description = "The inverval for polling metrics data (in seconds)"

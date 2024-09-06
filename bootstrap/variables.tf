@@ -27,6 +27,13 @@ variable "scrolls_port" {
   default = 8000
 }
 
+variable "dbcreds" {
+  type = object({
+    username = string
+    password = string
+  })
+}
+
 // Operator
 variable "operator_image_tag" {
   type = string
@@ -110,11 +117,13 @@ variable "proxy_resources" {
 
 variable "instances" {
   type = map(object({
-    image     = optional(string)
-    image_tag = optional(string)
-    salt      = string
-    network   = string
-    replicas  = optional(number)
+    image             = optional(string)
+    image_tag         = optional(string)
+    salt              = string
+    network           = string
+    postgres_host     = string
+    postgres_database = string
+    replicas          = optional(number)
     resources = optional(object({
       limits = object({
         cpu    = string
@@ -126,81 +135,4 @@ variable "instances" {
       })
     }))
   }))
-}
-
-variable "indexers" {
-  type = map(object({
-    image_tag          = optional(string)
-    network            = string
-    testnet_magic      = string
-    index_start_slot   = number
-    index_start_hash   = string
-    shipyard_policy_id = string
-    utxo_adresses      = string
-    node_private_dns   = string
-    postgres_host      = string
-    resources = optional(object({
-      limits = object({
-        cpu    = string
-        memory = string
-      })
-      requests = object({
-        cpu    = string
-        memory = string
-      })
-    }))
-  }))
-}
-
-// Postgres
-variable "enable_master_load_balancer" {
-  type    = bool
-  default = false
-}
-
-variable "enable_replica_load_balancer" {
-  type    = bool
-  default = false
-}
-
-variable "postgres_resources" {
-  type = object({
-    requests = map(string)
-    limits   = map(string)
-  })
-
-  default = {
-    "limits" = {
-      memory = "2Gi"
-      cpu    = "4000m"
-    }
-    "requests" = {
-      memory = "2Gi"
-      cpu    = "100m"
-    }
-  }
-}
-
-variable "postgres_params" {
-  default = {
-    "max_standby_archive_delay"   = "900s"
-    "max_standby_streaming_delay" = "900s"
-  }
-}
-
-variable "postgres_volume" {
-  type = object({
-    storage_class = string
-    size          = string
-  })
-
-  default = {
-    storage_class = "fast"
-    size          = "30Gi"
-  }
-}
-
-variable "postgres_replicas" {
-  type    = number
-  default = 2
 }

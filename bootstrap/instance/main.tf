@@ -25,14 +25,22 @@ variable "image_tag" {
   default = "latest"
 }
 
+variable "dbcreds_secret_name" {
+  type    = string
+  default = "scrolls-dbcreds"
+}
+
 variable "port" {
   type    = number
   default = 8000
 }
 
 variable "postgres_host" {
-  type    = string
-  default = "dmtr-postgres-scrolls"
+  type = string
+}
+
+variable "postgres_database" {
+  type = string
 }
 
 variable "replicas" {
