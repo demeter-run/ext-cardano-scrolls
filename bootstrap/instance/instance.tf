@@ -66,11 +66,22 @@ resource "kubernetes_deployment_v1" "scrolls" {
           }
 
           env {
+            name = "POSTGRES_USER"
+
+            value_from {
+              secret_key_ref {
+                key  = "username"
+                name = var.dbcreds_secret_name
+              }
+            }
+          }
+
+          env {
             name = "POSTGRES_PASSWORD"
             value_from {
               secret_key_ref {
                 key  = "password"
-                name = "scrolls.${var.postgres_host}.credentials.postgresql.acid.zalan.do"
+                name = var.dbcreds_secret_name
               }
             }
           }
@@ -81,13 +92,13 @@ resource "kubernetes_deployment_v1" "scrolls" {
           }
 
           env {
-            name  = "POSTGRES_USER"
-            value = "scrolls"
+            name  = "POSTGRES_DATABASE"
+            value = var.postgres_database
           }
 
           env {
             name  = "DATABASE_URL"
-            value = "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/scrolls-${var.network}"
+            value = "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/${var.postgres_database}"
           }
         }
 

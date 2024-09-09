@@ -72,7 +72,7 @@ resource "kubernetes_deployment_v1" "operator" {
           }
 
           env {
-            name = "EXTENSION_SUBDOMAIN"
+            name  = "EXTENSION_SUBDOMAIN"
             value = var.extension_name
           }
 
