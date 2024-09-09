@@ -117,13 +117,12 @@ variable "proxy_resources" {
 
 variable "instances" {
   type = map(object({
-    image             = optional(string)
-    image_tag         = optional(string)
-    salt              = string
-    network           = string
-    postgres_host     = string
-    postgres_database = string
-    replicas          = optional(number)
+    image         = optional(string)
+    image_tag     = optional(string)
+    salt          = string
+    network       = string
+    postgres_host = string
+    replicas      = optional(number)
     resources = optional(object({
       limits = object({
         cpu    = string

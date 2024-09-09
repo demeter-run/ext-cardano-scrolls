@@ -5,8 +5,8 @@ resource "kubernetes_secret" "dbcreds" {
   }
 
   data = {
-    username = var.dbsync_creds.username
-    password = var.dbsync_creds.password
+    username = var.dbcreds.username
+    password = var.dbcreds.password
   }
 
   type = "Opaque"
