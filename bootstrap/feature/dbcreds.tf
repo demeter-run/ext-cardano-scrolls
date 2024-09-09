@@ -11,5 +11,3 @@ resource "kubernetes_secret" "dbcreds" {
 
   type = "Opaque"
 }
-
-
