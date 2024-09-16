@@ -21,9 +21,21 @@ variable "dbcreds" {
   })
 }
 
+variable "ownercreds" {
+  type = object({
+    username = string
+    password = string
+  })
+}
+
 variable "dbcreds_secret_name" {
   type    = string
   default = "scrolls-dbcreds"
+}
+
+variable "ownercreds_secret_name" {
+  type    = string
+  default = "scrolls-ownercreds"
 }
 
 variable "metrics_delay" {

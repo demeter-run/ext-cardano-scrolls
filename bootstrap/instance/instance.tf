@@ -49,6 +49,14 @@ resource "kubernetes_deployment_v1" "scrolls" {
           image             = "${var.image}:${var.image_tag}"
           image_pull_policy = "IfNotPresent"
 
+          args = [
+            "--schema",
+            "collections",
+            "--watch",
+            "--owner-connection",
+            "postgres://$(POSTGRES_OWNER_USER):$(POSTGRES_OWNER_PASSWORD)@$(POSTGRES_HOST):5432/${var.postgres_database}"
+          ]
+
           resources {
             limits = {
               cpu    = var.resources.limits.cpu
@@ -82,6 +90,26 @@ resource "kubernetes_deployment_v1" "scrolls" {
               secret_key_ref {
                 key  = "password"
                 name = var.dbcreds_secret_name
+              }
+            }
+          }
+
+          env {
+            name = "POSTGRES_OWNER_USER"
+            value_from {
+              secret_key_ref {
+                key  = "username"
+                name = var.ownercreds_secret_name
+              }
+            }
+          }
+
+          env {
+            name = "POSTGRES_OWNER_PASSWORD"
+            value_from {
+              secret_key_ref {
+                key  = "password"
+                name = var.ownercreds_secret_name
               }
             }
           }
