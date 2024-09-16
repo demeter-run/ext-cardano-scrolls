@@ -18,6 +18,7 @@ module "scrolls_v1_feature" {
   source             = "./feature"
   namespace          = var.namespace
   dbcreds            = var.dbcreds
+  ownercreds         = var.ownercreds
   operator_image_tag = var.operator_image_tag
   metrics_delay      = var.metrics_delay
   dns_zone           = var.dns_zone
@@ -51,7 +52,7 @@ module "scrolls_instances" {
   network           = each.value.network
   port              = var.scrolls_port
   postgres_host     = each.value.postgres_host
-  postgres_database = "collections-cardano-${each.value.network}"
+  postgres_database = "cardano-${each.value.network}"
   replicas          = coalesce(each.value.replicas, 1)
   resources = coalesce(each.value.resources, {
     limits : {

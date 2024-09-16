@@ -34,6 +34,13 @@ variable "dbcreds" {
   })
 }
 
+variable "ownercreds" {
+  type = object({
+    username = string
+    password = string
+  })
+}
+
 // Operator
 variable "operator_image_tag" {
   type = string

@@ -30,6 +30,11 @@ variable "dbcreds_secret_name" {
   default = "scrolls-dbcreds"
 }
 
+variable "ownercreds_secret_name" {
+  type    = string
+  default = "scrolls-ownercreds"
+}
+
 variable "port" {
   type    = number
   default = 8000
