@@ -55,6 +55,10 @@ resource "kubernetes_manifest" "customresourcedefinition_scrollsports_demeter_ru
               "properties" = {
                 "spec" = {
                   "properties" = {
+                    "authToken" = {
+                      "nullable" = true
+                      "type" = "string"
+                    }
                     "network" = {
                       "type" = "string"
                     }
