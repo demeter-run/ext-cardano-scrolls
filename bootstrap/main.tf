@@ -26,6 +26,7 @@ module "scrolls_v1_feature" {
   dcu_per_request    = var.dcu_per_request
   resources          = var.operator_resources
   extension_name     = var.extension_name
+  replicas           = var.operator_replicas
 }
 
 module "scrolls_v1_proxy" {

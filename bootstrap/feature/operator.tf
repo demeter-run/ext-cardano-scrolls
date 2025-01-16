@@ -16,7 +16,7 @@ resource "kubernetes_deployment_v1" "operator" {
   }
 
   spec {
-    replicas = 1
+    replicas = var.replicas
 
     selector {
       match_labels = {

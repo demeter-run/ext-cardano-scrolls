@@ -42,6 +42,11 @@ variable "ownercreds" {
 }
 
 // Operator
+variable "operator_replicas" {
+  type    = number
+  default = 1
+}
+
 variable "operator_image_tag" {
   type = string
 }
