@@ -80,3 +80,9 @@ variable "resources" {
 variable "extension_name" {
   type = string
 }
+
+variable "replicas" {
+  type    = number
+  default = 1
+
+}
